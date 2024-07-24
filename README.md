@@ -1,7 +1,7 @@
 # Hanghae plus ci/cd practice
 
 ## Diagram
-![Group 14](https://github.com/user-attachments/assets/8c7cdbe8-7301-48f1-88b2-ca83cb6ff7e3)
+![Group 16](https://github.com/user-attachments/assets/2fea511b-6e3f-4d14-b1cc-60eea7eb8f79)
 
 ### Next.js 프로젝트 S3 배포 및 CloudFront 캐시 무효화 워크플로우
 
