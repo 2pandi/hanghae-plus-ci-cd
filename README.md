@@ -1,6 +1,56 @@
 # Hanghae plus ci/cd practice
 
+## Diagram
 ![Group 14](https://github.com/user-attachments/assets/8c7cdbe8-7301-48f1-88b2-ca83cb6ff7e3)
+
+### Next.js 프로젝트 S3 배포 및 CloudFront 캐시 무효화 워크플로우
+
+#### a. 트리거
+- `main` 브랜치에 푸시될 때
+- 수동으로 워크플로우 실행 시
+
+#### b. 작업 과정
+
+1. **환경 설정**
+   - Ubuntu 최신 버전의 러너 사용
+
+2. **코드 체크아웃**
+   - 저장소의 코드를 가져옴
+
+3. **pnpm 설정**
+   - 최신 버전의 pnpm 설치
+
+4. **Node.js 설정**
+   - Node.js 18.x 버전 설치
+
+5. **pnpm 캐시 설정**
+   - pnpm 스토어 디렉토리 경로 확인
+   - 의존성 캐싱을 위한 actions/cache 사용
+
+6. **의존성 설치**
+   - `pnpm install` 실행
+
+7. **프로젝트 빌드**
+   - `pnpm run build` 실행
+
+8. **AWS 자격 증명 구성**
+   - AWS 액세스 키, 시크릿 키, 리전 설정
+   - 저장소 시크릿에서 값을 가져옴
+
+9. **S3에 배포**
+   - `out/` 디렉토리의 내용을 S3 버킷에 동기화
+   - 기존 파일 삭제 옵션 사용
+
+10. **CloudFront 캐시 무효화**
+    - 모든 경로("/*")에 대해 캐시 무효화 실행
+
+#### c. 주의사항
+- AWS 관련 정보(액세스 키, 시크릿 키, 리전, S3 버킷 이름, CloudFront 배포 ID)는 저장소의 시크릿으로 관리됨
+- pnpm을 사용하여 의존성 관리 및 빌드 수행
+- Next.js 프로젝트의 정적 출력(`out/` 디렉토리)을 S3에 배포
+
+이 워크플로우는 Next.js 프로젝트를 자동으로 빌드하고, AWS S3에 배포한 후, CloudFront 캐시를 무효화하여 최신 콘텐츠를 즉시 반영합니다.
+
 
 ## 주요 링크
 * S3 버킷 엔드포인트: http://hanghae-plus-2pandi.s3-website-us-east-1.amazonaws.com
