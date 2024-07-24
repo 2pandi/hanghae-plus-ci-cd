@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Hanghae plus ci/cd practice
 
-## Getting Started
+![Group 14](https://github.com/user-attachments/assets/8c7cdbe8-7301-48f1-88b2-ca83cb6ff7e3)
 
-First, run the development server:
+## 주요 링크
+* S3 버킷 엔드포인트: http://hanghae-plus-2pandi.s3-website-us-east-1.amazonaws.com
+* CloudFront 배포 도메인: https://d2dsrkp5heu8n5.cloudfront.net/
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### a. S3 로드 Overview
+
+<img width="782" alt="스크린샷 2024-07-24 23 52 02" src="https://github.com/user-attachments/assets/2be44e3d-3ffe-4fe6-86b7-d96245436d0a">
+
+### b. CloudFront 로드 Overview
+
+<img width="779" alt="스크린샷 2024-07-24 23 52 54" src="https://github.com/user-attachments/assets/77567933-b312-4d36-969c-caf167d92077">
+
+## 주요 개념
+### 1. CI/CD 도구와 Github Actions
+CI/CD는 지속적 통합(Continuous Integration)과 지속적 배포(Continuous Delivery/Deployment)를 의미합니다.
+이러한 도구들은 소프트웨어 개발 프로세스를 자동화하고 개선하는 데 사용됩니다.
+
+#### a. CI (지속적 통합)
+개발자들이 코드 변경사항을 자주 병합하도록 장려합니다.
+자동화된 빌드와 테스트를 실행하여 통합 문제를 빠르게 발견합니다.
+
+#### b. CD (지속적 배포/전달)
+지속적 전달: 프로덕션 환경으로 배포할 준비가 된 코드를 자동으로 생성합니다.
+지속적 배포: 코드 변경사항을 자동으로 프로덕션 환경에 배포합니다.
+
+#### c. 주요 CI/CD 도구들
+```
+1. Jenkins: 오픈소스, 높은 커스터마이징 가능성
+2. GitLab CI/CD: GitLab과 통합된 CI/CD 솔루션
+3. Travis CI: 호스팅 서비스, GitHub와 잘 통합됨
+4. CircleCI: 클라우드 기반, 빠른 빌드 속도
+5. GitHub Actions: GitHub와 직접 통합된 워크플로우 자동화 도구
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+이러한 도구들은 개발 프로세스를 자동화하고, 코드 품질을 향상시키며, 배포 주기를 단축시키는 데 도움을 줍니다.
+각 도구는 고유한 특징과 장단점을 가지고 있어, 프로젝트의 요구사항에 따라 적절한 도구를 선택할 수 있습니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### d. Github Actions
+GitHub Actions는 GitHub에서 제공하는 자동화 도구입니다. 이를 통해 소프트웨어 개발 워크플로우를 자동화할 수 있습니다. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```
+1. GitHub 저장소와 직접 통합됩니다.
+2. YAML 파일을 사용하여 워크플로우를 정의합니다.
+3. 다양한 이벤트(예: push, pull request)에 반응하여 실행될 수 있습니다.
+4. 빌드, 테스트, 배포 등 다양한 작업을 자동화할 수 있습니다.
+```
 
-## Learn More
+### 2. 스토리지와 S3
+#### a. 스토리지
+스토리지는 디지털 데이터를 저장하고 관리하는 시스템이나 장치를 말합니다. 주요 유형은 다음과 같습니다
+```
+1. 로컬 스토리지: 컴퓨터나 서버의 하드 드라이브와 같이 물리적으로 가까운 곳에 위치한 저장 장치
+2. 네트워크 스토리지: LAN이나 WAN을 통해 접근 가능한 저장 시스템
+3. 클라우드 스토리지: 인터넷을 통해 접근 가능한 원격 서버에 데이터를 저장하는 모델
+```
 
-To learn more about Next.js, take a look at the following resources:
+#### b. Amazon S3 (Simple Storage Service)
+Amazon S3는 AWS(Amazon Web Services)에서 제공하는 클라우드 스토리지 서비스입니다. 주요 특징은 다음과 같습니다.
+```
+1. 확장성: 거의 무제한의 데이터를 저장할 수 있습니다.
+2. 내구성: 데이터를 여러 시설과 장치에 중복 저장하여 높은 내구성을 제공합니다.
+3. 가용성: 99.99%의 가용성을 보장합니다.
+4. 보안: 다양한 보안 기능을 제공합니다 (예: 암호화, 액세스 제어).
+5. 유연성: 다양한 스토리지 클래스를 제공하여 비용과 성능을 최적화할 수 있습니다.
+6. 정적 웹사이트 호스팅: HTML, CSS, JavaScript 파일을 호스팅하여 정적 웹사이트를 제공할 수 있습니다.
+```
+S3는 다음과 같은 용도로 널리 사용됩니다:
+- 백업 및 아카이브
+- 데이터 레이크 구축
+- 웹사이트 및 모바일 앱의 에셋 저장
+- 빅데이터 분석
+- 소프트웨어 배포
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+S3의 데이터 구조는 '버킷'과 '객체'로 구성됩니다. 버킷은 최상위 디렉토리와 유사하며, 객체는 파일과 유사합니다.
+이러한 구조를 통해 효율적인 데이터 관리와 액세스가 가능합니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+S3는 사용량에 따라 비용이 청구되며, 다른 AWS 서비스들과 쉽게 통합될 수 있어 클라우드 기반 애플리케이션 개발에 널리 사용됩니다.
 
-## Deploy on Vercel
+### 3. CDN과 CloudFront
+#### a. CDN (Content Delivery Network)
+CDN은 지리적으로 분산된 서버 네트워크를 사용하여 웹 콘텐츠를 사용자에게 더 빠르게 전달하는 시스템입니다. 주요 특징은 다음과 같습니다.
+```
+1. 성능 향상: 사용자와 가까운 서버에서 콘텐츠를 제공하여 로딩 시간을 단축합니다.
+2. 높은 가용성: 여러 서버에 콘텐츠를 분산 저장하여 안정성을 높입니다.
+3. 비용 절감: 원본 서버의 부하를 줄여 인프라 비용을 절감할 수 있습니다.
+4. 보안: DDoS 공격 방어 등 추가적인 보안 기능을 제공할 수 있습니다.
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### b. Amazon CloudFront
+CloudFront는 Amazon Web Services(AWS)에서 제공하는 CDN 서비스입니다. 주요 특징은 다음과 같습니다.
+```
+1. 글로벌 네트워크: 전 세계에 분산된 엣지 로케이션을 통해 콘텐츠를 제공합니다.
+2. 낮은 지연 시간: 사용자와 가까운 엣지 로케이션에서 콘텐츠를 제공하여 지연 시간을 최소화합니다.
+3. 통합성: 다른 AWS 서비스(예: S3, EC2)와 쉽게 통합됩니다.
+4. 보안: HTTPS, 필드 레벨 암호화 등 다양한 보안 기능을 제공합니다.
+5. 사용자 정의: 엣지에서 Lambda@Edge를 사용하여 콘텐츠를 동적으로 처리할 수 있습니다.
+6. 실시간 메트릭스: CloudWatch와 통합되어 실시간 모니터링이 가능합니다.
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+CloudFront의 주요 사용 사례:
+- 정적 웹사이트 콘텐츠 전송 가속화
+- 동적 콘텐츠 및 API 가속화
+- 비디오 스트리밍
+- 소프트웨어 배포
+
+CloudFront는 캐시 무효화(invalidation) 기능을 제공하여 업데이트된 콘텐츠를 즉시 반영할 수 있게 합니다. 이는 배포 과정에서 중요한 역할을 합니다.
+CDN과 CloudFront를 사용하면 웹 애플리케이션의 성능을 크게 향상시킬 수 있으며, 특히 글로벌 사용자를 대상으로 하는 서비스에 매우 유용합니다.
+
+### 4. 캐시 무효화(Cache Invalidation)
+캐시 무효화는 CDN이나 다른 캐싱 시스템에 저장된 콘텐츠를 강제로 새로고침하는 프로세스입니다. 이는 캐시된 콘텐츠가 더 이상 유효하지 않을 때 사용됩니다.
+
+**주요 특징**
+```
+1. 콘텐츠 업데이트: 원본 콘텐츠가 변경되었을 때 캐시된 버전을 최신 상태로 유지합니다.
+2. 즉시 반영: 변경사항을 사용자에게 즉시 제공할 수 있습니다.
+3. 선택적 적용: 특정 파일이나 경로에 대해서만 무효화를 적용할 수 있습니다.
+```
+
+**사용 시나리오:**
+- 웹사이트 콘텐츠 업데이트 후
+- 버그 수정 후 신속한 배포
+- 시간에 민감한 콘텐츠 업데이트 (예: 뉴스, 실시간 데이터)
+
+**CloudFront에서의 캐시 무효화**
+```
+1. 특정 파일 무효화: 개별 파일이나 경로를 지정하여 무효화
+2. 와일드카드 무효화: 패턴을 사용하여 여러 파일을 한 번에 무효화 (예: "/images/*")
+3. 전체 무효화: 배포의 모든 파일을 무효화 ("/*")
+```
+
+캐시 무효화는 최신 콘텐츠를 신속하게 제공하는 데 중요한 도구이지만, 신중하게 사용해야 합니다. 효과적인 사용은 웹 애플리케이션의 성능과 사용자 경험을 크게 향상시킬 수 있습니다.
+
+### 5. 환경변수와 Repository secret
+#### a. 환경 변수
+1. 정의: 프로세스가 실행되는 환경에서 사용할 수 있는 동적 값입니다.
+2. 용도:
+   - 설정 정보 저장 (예: 데이터베이스 연결 문자열)
+   - 런타임 동작 제어 (예: 개발/프로덕션 모드 설정)
+   - 시스템 간 정보 전달
+3. 특징:
+   - 코드와 설정을 분리하여 유연성 제공
+   - 다양한 환경(개발, 테스트, 프로덕션)에서 쉽게 재사용 가능
+   - 프로그램 실행 중 변경 가능
+4. 사용 예:
+   ```
+   DATABASE_URL=mongodb://localhost:27017/myapp
+   NODE_ENV=production
+   ```
+
+#### b. Repository Secret
+1. 정의: GitHub 저장소에 안전하게 저장되는 암호화된 환경 변수입니다.
+2. 용도:
+   - 민감한 정보 저장 (예: API 키, 암호)
+   - CI/CD 파이프라인에서 안전하게 사용
+3. 특징:
+   - GitHub Actions 워크플로우에서 안전하게 접근 가능
+   - 저장소 설정에서 관리
+   - 값이 마스킹되어 로그에 노출되지 않음
+4. 사용 예 (GitHub Actions 워크플로우):
+   ```yaml
+   steps:
+     - name: Use secret
+       env:
+         API_KEY: ${{ secrets.API_KEY }}
+       run: echo "Using API key"
+   ```
+
+**주요 차이점:**
+1. 보안: Repository Secret은 더 높은 수준의 보안을 제공합니다.
+2. 가시성: 환경 변수는 일반적으로 더 쉽게 접근하고 볼 수 있습니다.
+3. 범위: 환경 변수는 시스템 전체 또는 프로세스 수준에서 설정될 수 있지만, Repository Secret은 특정 GitHub 저장소에 국한됩니다.
+
+두 가지 모두 설정 관리와 보안에 중요한 역할을 합니다. 환경 변수는 일반적인 설정에, Repository Secret은 민감한 정보 관리에 주로 사용됩니다.
+
+**주의사항:**
+- 과도한 무효화는 원본 서버에 부하를 줄 수 있습니다.
+- 대규모 무효화는 시간이 걸릴 수 있으며, 비용이 발생할 수 있습니다.
+- 효율적인 캐싱 전략과 함께 사용해야 합니다.
